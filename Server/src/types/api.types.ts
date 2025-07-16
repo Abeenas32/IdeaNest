@@ -12,14 +12,14 @@ export interface ApiError {
   stack?: string;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    pages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-}
+// export interface PaginatedResponse<T> {
+//   data: T[];
+//   pagination: {
+//     page: number;
+//     limit: number;
+//     total: number;
+//     pages: number;
+//     hasNext: boolean;
+//     hasPrev: boolean;
+// //   };
+// }
