@@ -55,7 +55,7 @@ const userSchema = new Schema<IUser>({
   }
 });
 
-// Indexes for performance
+// Indexes for performance, kind of like sorting for faster responses 
 userSchema.index({ email: 1 });
 userSchema.index({ createdAt: -1 });
 

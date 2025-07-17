@@ -50,3 +50,17 @@ export const verifyRefreshTokens = (token: string): TokenPayload => {
     throw new Error("Invalid Refresh Token");
   }
 };
+
+
+ export const verifyRefreshToken = (token : string) : TokenPayload => {
+    try {
+      return jwt.verify(token, config.jwt.refreshSecret, { 
+        issuer: config.jwt.issuer,
+        audience: config.jwt.audience,
+      }) as TokenPayload
+    } catch (error) {
+      throw new Error("Invalid refresh token");
+      
+    }
+
+ }
