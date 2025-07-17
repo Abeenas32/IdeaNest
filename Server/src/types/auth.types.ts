@@ -1,9 +1,9 @@
-import { Request } from "express";
+import { Request } from 'express';
 
 export interface TokenPayload {
-  userID: string;
+  userId: string; 
   email: string;
-  role: "user" | "admin";
+  role: 'user' | 'admin';
   iat?: number;
   exp?: number;
   iss?: string;
@@ -22,10 +22,9 @@ export interface AuthenticatedRequest extends Request {
 export interface RegisterCredentials {
   email: string;
   password: string;
-  confirmPassword : string;
+  confirmPassword: string;
 }
 
- export interface RefreshTokenRequest {
-     
-     refreshtoken : string;
- }
+export interface RefreshTokenRequest {
+  refreshToken: string; 
+}
