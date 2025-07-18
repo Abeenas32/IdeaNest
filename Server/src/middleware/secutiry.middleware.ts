@@ -3,7 +3,7 @@ import helmet from "helmet";
 import mongoSanitize from 'express-mongo-sanitize';
 import { config } from "../config/environment.config";
 
-// for helmet protection
+// for helmet protection used to secure HTTP headers
 export const securityMiddleware = helmet({
     contentSecurityPolicy: {
         directives: {

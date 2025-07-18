@@ -8,7 +8,7 @@ export interface ApiResponse<T = any> {
 
 export interface ApiError {
   message: string;
-  statusCode: string;
+  statusCode: number;
   stack?: string;
 }
 
