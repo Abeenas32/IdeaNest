@@ -11,7 +11,7 @@ export const generateAccessTokens = (
       issuer: config.jwt.issuer,
       audience: config.jwt.audience,
     } as jwt.SignOptions);
-    
+
   } catch (error) {
     // console.error('Failed to generate access token:', error);
     throw new Error('Access token generation failed');
@@ -27,7 +27,7 @@ export const generateRefreshToken = (
       issuer: config.jwt.issuer,
       audience: config.jwt.audience,
     } as jwt.SignOptions);
-    
+
   } catch (error) {
     throw new Error("Error in generating the RefreshTokens");
   }
@@ -40,9 +40,9 @@ export const generateTokens = (payload: Omit<TokenPayload, 'iat' | 'exp'>): Auth
   };
 };
 
-export const verifyRefreshTokens = (token: string): TokenPayload => {
+export const verifyAccessTokens = (token: string): TokenPayload => {
   try {
-    return jwt.verify(token, config.jwt.refreshSecret, {
+    return jwt.verify(token, config.jwt.accessSecret, {
       issuer: config.jwt.issuer,
       audience: config.jwt.audience,
     }) as TokenPayload;
@@ -52,15 +52,23 @@ export const verifyRefreshTokens = (token: string): TokenPayload => {
 };
 
 
- export const verifyRefreshToken = (token : string) : TokenPayload => {
-    try {
-      return jwt.verify(token, config.jwt.refreshSecret, { 
-        issuer: config.jwt.issuer,
-        audience: config.jwt.audience,
-      }) as TokenPayload
-    } catch (error) {
-      throw new Error("Invalid refresh token");
-      
-    }
+export const verifyRefreshToken = (token: string): TokenPayload => {
+  try {
+    return jwt.verify(token, config.jwt.refreshSecret, {
+      issuer: config.jwt.issuer,
+      audience: config.jwt.audience,
+    }) as TokenPayload
+  } catch (error) {
+    throw new Error("Invalid refresh token");
 
- }
+  }
+
+}
+
+export const extractToken =  (authHeader : string | undefined ) : string | null => {
+    if (!authHeader || !authHeader.startsWith('Bearer')){
+
+      return null;
+    }
+     return authHeader.substring(7);
+}

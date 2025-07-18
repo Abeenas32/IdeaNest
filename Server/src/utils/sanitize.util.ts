@@ -1,4 +1,4 @@
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 
  export const  sanitize = (dirty : string ) : string => {
      return DOMPurify.sanitize(dirty, { 
@@ -17,7 +17,7 @@ import DOMPurify from "dompurify";
   if(Array.isArray(input)) {
      return input.map(sanitizeInput);
   }
-  if(typeof input  === 'object' && input === null) {
+  if(typeof input  === 'object' && input !== null) {
      const sanitized :any = {};
      for (const key in input ) {
         if (input.hasOwnProperty(key)){
