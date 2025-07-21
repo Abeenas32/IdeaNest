@@ -11,3 +11,11 @@ export const generateAnonymousFingerPrint = (req: Request): string => {
      const fingerPrint = components.join('|');
      return crypto.createHash('sha256').update(fingerPrint).digest('hex')
 };
+
+export const extractClientInfo = (req: Request) => {
+  return {
+    ipAddress: req.ip || req.connection.remoteAddress || 'unknown',
+    userAgent: req.get('User-Agent') || 'unknown',
+    fingerprint: generateAnonymousFingerPrint(req)
+  };
+};
