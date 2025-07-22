@@ -3,7 +3,6 @@ import { Router } from 'express';
 import { register, login, refresh, logout, logoutAll, getProfile } from '../controllers/auth.controller';
 import { validate } from '../middleware/validation.middleware';
 import { authenticate } from '../middleware/auth.middleware';
-// import { rateLimitMiddleware } from '../middleware/security.middleware';
 import { registerSchema, loginSchema, refreshTokenSchema } from '../validators/auth.validator';
 
 const router = Router();
