@@ -13,7 +13,7 @@ export const authenticate = (req: AuthenticatedRequest, res: Response, next: Nex
       sendError(res, 'Access token is required', 401);
       return;
     }
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string) as DecodedToken;
+    // const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string) as DecodedToken;
     const payload = verifyAccessTokens(token)
     req.user = payload;
     next();

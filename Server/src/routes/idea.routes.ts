@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ideaController } from "../controllers/idea,controllers";
+import { ideaController } from "../controllers/idea.controllers";
 import { validate } from "../middleware/validation.middleware";
 import { authenticate,optionalAuth } from "../middleware/auth.middleware";
 import {createIdeaSchema, updateIdeaSchema, getIdeasSchema,getIdeaByIdSchema} from "../validators/idea.validator";
