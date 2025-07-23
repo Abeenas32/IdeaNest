@@ -90,7 +90,7 @@ class IdeaService {
             { $inc: { viewCount: 1 } }
           ).catch(error => {
             console.error('Error incrementing view count:', error);
-          });
+          }); 
         });
       }
 
@@ -211,7 +211,7 @@ class IdeaService {
 
   private buildQuery(filters: IdeaFilters): any {
     const query: any = { isPublic: true };
-
+ 
     if (filters.search) {
       query.$text = { $search: filters.search };
     }

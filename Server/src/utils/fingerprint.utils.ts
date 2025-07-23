@@ -17,5 +17,5 @@ export const extractClientInfo = (req: Request) => {
     ipAddress: req.ip || req.connection.remoteAddress || 'unknown',
     userAgent: req.get('User-Agent') || 'unknown',
     fingerprint: generateAnonymousFingerPrint(req)
-  };
+   };
 };
