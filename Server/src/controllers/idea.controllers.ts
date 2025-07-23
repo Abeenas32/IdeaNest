@@ -2,7 +2,7 @@ import { Idea } from '../models/Idea.models';
 // import { createIdea } from './../services/idea.service';
 import { AuthenticatedRequest } from '../types/auth.types';
 import { sendError, sendSuccess } from '../utils/response.utils';
-import {Request, Response , NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ideaService } from '../services/idea.service';
 import { send } from 'process';
 
@@ -12,27 +12,29 @@ class IdeaController {
       const { title, content, tags } = req.body;
       const userId = req.user?.userId;
       const ideaData = {
-                 title, 
-                 content,
-                 tags,
-                 authorId : userId , 
-                 authorType : userId ? 'authenticated' as const : 'anonymous' as const 
-              }
-              const idea = await ideaService.createIdea(ideaData, req);
-              sendSuccess(res,
-                     { idea:{
-                    _id : idea._id,
-                    title : idea.title,
-                    content : idea.content,
-                    tags : idea.tags,
-                    authorTpye : idea.authorType,
-                    createdAt : idea.createdAt,
-                }},'Idea created Successfylly');
-          } catch (error) {
-            next(error);
+        title,
+        content,
+        tags,
+        authorId: userId,
+        authorType: userId ? 'authenticated' as const : 'anonymous' as const
+      }
+      const idea = await ideaService.createIdea(ideaData, req);
+      sendSuccess(res,
+        {
+          idea: {
+            _id: idea._id,
+            title: idea.title,
+            content: idea.content,
+            tags: idea.tags,
+            authorTpye: idea.authorType,
+            createdAt: idea.createdAt,
           }
-     }
-async getIdeas(req: Request, res: Response, next: NextFunction): Promise<void> {
+        }, 'Idea created Successfylly');
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getIdeas(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const {
         page,
@@ -53,10 +55,10 @@ async getIdeas(req: Request, res: Response, next: NextFunction): Promise<void> {
       };
 
       const pagination = { page: Number(page), limit: Number(limit) };
-      
+
       const result = await ideaService.getIdeas(filters, pagination);
-      
-        sendSuccess(res, result, 'Ideas retrieved successfully');
+
+      sendSuccess(res, result, 'Ideas retrieved successfully');
     } catch (error) {
       next(error);
     }
@@ -65,9 +67,9 @@ async getIdeas(req: Request, res: Response, next: NextFunction): Promise<void> {
   async getIdeaById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      
+
       const idea = await ideaService.getIdeaById(id, true);
-      
+
       if (!idea) {
         sendError(res, 'Idea not found', 404);
         return;
@@ -147,8 +149,7 @@ async getIdeas(req: Request, res: Response, next: NextFunction): Promise<void> {
   }
 
 
-    } 
+}
 
- export const ideaController = new IdeaController();
-    
-    
+export const ideaController = new IdeaController();
+

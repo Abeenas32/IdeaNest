@@ -9,7 +9,6 @@ class IdeaService {
   async createIdea(ideaData: CreateIdeaData, req: Request): Promise<IIdea> {
     try {
       const clientInfo = extractClientInfo(req);
-
       const ideaPayload: any = {
         title: ideaData.title.trim(),
         content: ideaData.content.trim(),
