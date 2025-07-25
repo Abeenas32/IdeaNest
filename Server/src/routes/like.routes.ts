@@ -1,34 +1,38 @@
-import { likeController } from './../controllers/like.controllers';
-import { optionalAuth } from './../middleware/auth.middleware';
 import { Router } from "express";
-// import { likeController } from "../controllers/like.controllers";
-import { authenticate } from "../middleware/auth.middleware";
+import { likeController } from "../controllers/like.controllers";
+import { optionalAuth, authenticate } from "../middleware/auth.middleware";
 import { RateLimiterMiddleware } from "../middleware/rateLimit.middleware";
-//
 
 const router = Router();
 
+// Like or Unlike an idea
+router.post(
+  '/ideas/:ideaId/like',
+  optionalAuth,
+  RateLimiterMiddleware.likeAction,
+  likeController.toogleLike // ⚠️ consider correcting to: toggleLike
+);
 
- router.post('/ideas/:ideaId/like',
-    optionalAuth,
-    RateLimiterMiddleware.likeAction,
-    likeController.toogleLike
-)
-
- router.get('/ideas/:ideaId/like-status',
-  // Correct usage for a static member:
+// Check if the current user has liked the idea
+router.get(
+  '/ideas/:ideaId/like-status',
   RateLimiterMiddleware.readOperations,
   likeController.getLikeStatus
-)
+);
 
-router.get('ideas/:ideaId/likes',
-    RateLimiterMiddleware.public,
-likeController.getLikeCount)
+// Get total like count for an idea
+router.get(
+  '/ideas/:ideaId/likes', // ✅ added missing slash
+  RateLimiterMiddleware.public,
+  likeController.getLikeCount
+);
 
-router.get('/users/liked-ideas',
-    RateLimiterMiddleware.authenticatedOperations,
-    authenticate,
-    likeController.getUserLikedIdeas
-)
+// Get all ideas liked by the authenticated user
+router.get(
+  '/users/liked-ideas',
+  RateLimiterMiddleware.authenticatedOperations,
+  authenticate,
+  likeController.getUserLikedIdeas
+);
 
- export  { router as LikeRoutes };
+export { router as LikeRoutes };
