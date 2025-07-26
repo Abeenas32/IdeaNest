@@ -1,9 +1,9 @@
 import { AuthenticatedRequest } from './../types/auth.types';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { verifyAccessTokens, extractToken } from '../utils/jwt.utils';
 import { sendError } from '../utils/response.utils';
-import { DecodedToken } from '../types/idea.types';
-import jwt from 'jsonwebtoken';
+// import { DecodedToken } from '../types/idea.types';
+// import jwt from 'jsonwebtoken';
 
 export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
   try {
@@ -28,7 +28,7 @@ export const authorize = (roles: string[]) => {
       sendError(res, 'Authentication failed', 401);
       return;
     }
-    if (!roles.includes(req.user.role)) {
+    if (!req.user.role || !roles.includes(req.user.role)) {
       sendError(res, 'Invalid Permission', 403);
       return;
     }
@@ -38,7 +38,7 @@ export const authorize = (roles: string[]) => {
 
 // for the guest user cuz they don't have the token 
 //  required 
-export const optionalAuth = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const optionalAuth = (req: AuthenticatedRequest, next: NextFunction): void => {
   try {
     const authHeader = req.headers.authorization;
     const token = extractToken(authHeader);

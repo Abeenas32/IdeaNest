@@ -1,5 +1,5 @@
 import { ILike } from '../types/like.types';
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const likeSchema = new Schema<ILike>(
   {
