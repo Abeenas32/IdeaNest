@@ -1,10 +1,8 @@
-import { Idea } from '../models/Idea.models';
-// import { createIdea } from './../services/idea.service';
 import { AuthenticatedRequest } from '../types/auth.types';
 import { sendError, sendSuccess } from '../utils/response.utils';
 import { Request, Response, NextFunction } from 'express';
 import { ideaService } from '../services/idea.service';
-import { send } from 'process';
+// import { send } from 'process';
 
 class IdeaController {
   createIdea = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -15,7 +13,7 @@ class IdeaController {
         title,
         content,
         tags,
-        authorId: userId,
+       ...(userId && {authorId : userId}),
         authorType: userId ? 'authenticated' as const : 'anonymous' as const
       }
       const idea = await ideaService.createIdea(ideaData, req);

@@ -81,7 +81,7 @@ const ideaSchema = new Schema<IIdea>({
   timestamps: true,
   toJSON: { 
     virtuals: true,
-    transform: function(doc, ret: Record<string, any>) {
+    transform: function( ret: Record<string, any>) {
   delete ret.ipAddress;
   delete ret.userAgent;
   delete ret.anonymousFingerprint;
