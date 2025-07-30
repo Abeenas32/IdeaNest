@@ -5,9 +5,7 @@ import { sendSuccess, sendError } from '../utils/response.utils';
 import { validate } from '../middleware/validation.middleware';
 
 export class AdminController {
-  /**
-   * Get admin dashboard statistics
-   */
+  
   getDashboardStats = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const stats = await adminService.getAdminStats();
@@ -17,9 +15,7 @@ export class AdminController {
     }
   };
 
-  /**
-   * Get all users with pagination and filtering
-   */
+
   getAllUsers = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
@@ -39,9 +35,7 @@ export class AdminController {
     }
   };
 
-  /**
-   * Update user role (admin only)
-   */
+
   updateUserRole = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { userId } = req.params;
@@ -59,9 +53,7 @@ export class AdminController {
     }
   };
 
-  /**
-   * Toggle user active status
-   */
+
   toggleUserStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { userId } = req.params;
@@ -72,9 +64,6 @@ export class AdminController {
     }
   };
 
-  /**
-   * Delete user (soft delete)
-   */
   deleteUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { userId } = req.params;
@@ -85,9 +74,7 @@ export class AdminController {
     }
   };
 
-  /**
-   * Get user activity analytics
-   */
+ 
   getUserActivityAnalytics = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const days = parseInt(req.query.days as string) || 30;
@@ -98,9 +85,7 @@ export class AdminController {
     }
   };
 
-  /**
-   * Get content moderation queue
-   */
+  
   getModerationQueue = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
@@ -137,7 +122,8 @@ export class AdminController {
    */
   bulkUpdateUserRoles = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { updates } = req.body; // Array of { userId, role }
+      const { updates } = req.body; 
+      // Array of { userId, role }
 
       if (!Array.isArray(updates)) {
         sendError(res, 'Updates must be an array', 400);

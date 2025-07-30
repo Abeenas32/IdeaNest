@@ -16,7 +16,7 @@ export class LikeController {
     constructor() {
         this.likeService = new LikeService();
     }
-    toogleLike = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    toggleLike = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
         try {
             const { ideaId } = req.params;
             const userId = req.user?.id;
