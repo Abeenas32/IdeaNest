@@ -16,13 +16,13 @@ export class CacheService {
     ): Promise<boolean> {
         try {
             if (!RedisConfig.isRedisConnected()) {
-                console.warn('Redis is not connected, skippeing cache set')
+                console.warn('Redis is not connected, skipping cache set')
                 return false;
             }
             const { ttl = this.DEFAULT_TTL, prefix = this.DEFAULT_PREFIX } = options;
-            const cahceKey = `${prefix}: ${key}`;
+            const cacheKey = `${prefix}: ${key}`;
             const serializedValue = JSON.stringify(value);
-            (await redis).setex(cahceKey, ttl, serializedValue);
+            (await redis).setex(cacheKey, ttl, serializedValue);
             return true;
         } catch (error) {
             console.error('Cache set error', error);

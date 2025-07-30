@@ -170,6 +170,132 @@ class IdeaService {
     }
   }
 
+  /**
+   * Admin method to get all ideas with moderation info
+   */
+  async getIdeasForModeration(
+    page: number = 1,
+    limit: number = 20,
+    filters: any = {}
+  ): Promise<PaginationResult<IIdea>> {
+    try {
+      const skip = (page - 1) * limit;
+      const query: any = {};
+
+      // Apply filters
+      if (filters.isPublic !== undefined) query.isPublic = filters.isPublic;
+      if (filters.authorType) query.authorType = filters.authorType;
+      if (filters.minLikes) query.likeCount = { $gte: filters.minLikes };
+      if (filters.dateFrom) {
+        query.createdAt = { $gte: new Date(filters.dateFrom) };
+      }
+      if (filters.dateTo) {
+        if (query.createdAt) {
+          query.createdAt.$lte = new Date(filters.dateTo);
+        } else {
+          query.createdAt = { $lte: new Date(filters.dateTo) };
+        }
+      }
+
+      const [ideas, totalCount] = await Promise.all([
+        Idea.find(query)
+          .populate('authorId', 'email name role')
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit)
+          .lean(),
+        Idea.countDocuments(query)
+      ]);
+
+      const paginationResult = calculatePagination(
+        page,
+        limit,
+        totalCount
+      );
+
+      return {
+        data: ideas as IIdea[],
+        pagination: paginationResult
+      };
+    } catch (err) {
+      console.error('Error in getIdeasForModeration:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Admin method to toggle idea public status
+   */
+  async toggleIdeaPublicStatus(ideaId: string): Promise<IIdea | null> {
+    try {
+      if (!mongoose.Types.ObjectId.isValid(ideaId)) {
+        throw new Error('Invalid idea ID format');
+      }
+
+      const idea = await Idea.findById(ideaId);
+      if (!idea) {
+        throw new Error('Idea not found');
+      }
+
+      idea.isPublic = !idea.isPublic;
+      await idea.save();
+
+      return idea.populate('authorId', 'email name role');
+    } catch (err) {
+      console.error('Error in toggleIdeaPublicStatus:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Admin method to get idea statistics
+   */
+  async getIdeaStatistics(): Promise<any> {
+    try {
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      const [
+        totalIdeas,
+        publicIdeas,
+        privateIdeas,
+        ideasThisMonth,
+        ideasThisWeek,
+        anonymousIdeas,
+        authenticatedIdeas,
+        topIdeas
+      ] = await Promise.all([
+        Idea.countDocuments(),
+        Idea.countDocuments({ isPublic: true }),
+        Idea.countDocuments({ isPublic: false }),
+        Idea.countDocuments({ createdAt: { $gte: startOfMonth } }),
+        Idea.countDocuments({ createdAt: { $gte: startOfWeek } }),
+        Idea.countDocuments({ authorType: 'anonymous' }),
+        Idea.countDocuments({ authorType: 'authenticated' }),
+        Idea.find({ isPublic: true })
+          .sort({ likeCount: -1, createdAt: -1 })
+          .limit(10)
+          .select('title likeCount createdAt')
+          .lean()
+      ]);
+
+      return {
+        totalIdeas,
+        publicIdeas,
+        privateIdeas,
+        ideasThisMonth,
+        ideasThisWeek,
+        anonymousIdeas,
+        authenticatedIdeas,
+        topIdeas
+      };
+    } catch (err) {
+      console.error('Error in getIdeaStatistics:', err);
+      throw err;
+    }
+  }
+
   async getUserIdeas(
     userId: string,
     pagination: PaginationOptions
