@@ -7,7 +7,7 @@ export interface IUser extends Document {
   name?: string;
   bio?: string;
   avatar?: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'moderator';
   isEmailVerified: boolean;
   isActive: boolean;
   refreshTokens: string[];
@@ -15,6 +15,9 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
+  isAdmin(): boolean;
+  isModerator(): boolean;
+  canModerate(): boolean;
 }
 
 const userSchema = new Schema<IUser>({
@@ -33,8 +36,8 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, 'Password is required'],
     minlength: [8, 'Password must be at least 8 characters long'],
-    select: false
-     // Don't include password in queries by default
+    select: false,
+    // Don't include password in queries by default
   },
   name: {
     type: String,
@@ -58,7 +61,7 @@ const userSchema = new Schema<IUser>({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'admin', 'moderator'],
     default: 'user'
   },
   isEmailVerified: {
@@ -94,6 +97,7 @@ userSchema.index({ email: 1 });
 userSchema.index({ createdAt: -1 });
 userSchema.index({ isActive: 1 });
 userSchema.index({ name: 1 });
+userSchema.index({ role: 1 });
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
@@ -118,6 +122,21 @@ userSchema.methods.comparePassword = async function(candidatePassword: string): 
   }
 };
 
+// Admin role check methods
+userSchema.methods.isAdmin = function(): boolean {
+  return this.role === 'admin' && this.isActive && !this.deletedAt;
+};
+
+userSchema.methods.isModerator = function(): boolean {
+  return this.role === 'moderator' && this.isActive && !this.deletedAt;
+};
+
+userSchema.methods.canModerate = function(): boolean {
+  return (this.role === 'admin' || this.role === 'moderator') && 
+         this.isActive && 
+         !this.deletedAt;
+};
+
 // Soft delete middleware - only return active users by default
 userSchema.pre(/^find/, function(this: Query<any, any>, next) {
   // Check if the query has a custom option to include deleted users
@@ -132,10 +151,54 @@ userSchema.pre(/^find/, function(this: Query<any, any>, next) {
 
 export const User = mongoose.model<IUser>('User', userSchema);
 
-userSchema.statics.findWithDeleted = function() {
-  return this.find().setOptions({ includeDeleted: true });
+userSchema.statics.findWithDeleted = async function(filter = {}, options = {}) {
+  try {
+    return await this.find(filter, null, options).setOptions({ includeDeleted: true });
+  } catch (error) {
+    console.error('Error in findWithDeleted:', error);
+    throw new Error(`Failed to find users with deleted: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 };
 
-userSchema.statics.findOnlyDeleted = function() {
-  return this.find({ deletedAt: { $ne: null } });
+userSchema.statics.findOnlyDeleted = async function(filter = {}, options = {}) {
+  try {
+    const deletedFilter = { 
+      ...filter, 
+      deletedAt: { $ne: null } 
+    };
+    return await this.find(deletedFilter, null, options).setOptions({ includeDeleted: true });
+  } catch (error) {
+    console.error('Error in findOnlyDeleted:', error);
+    throw new Error(`Failed to find deleted users: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+
+// Admin-specific static methods
+userSchema.statics.findAdmins = async function(filter = {}, options = {}) {
+  try {
+    const adminFilter = { 
+      ...filter,
+      role: 'admin', 
+      isActive: true,
+      deletedAt: null 
+    };
+    return await this.find(adminFilter, null, options);
+  } catch (error) {
+    console.error('Error in findAdmins:', error);
+    throw new Error(`Failed to find admin users: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+userSchema.statics.findModerators = async function(filter = {}, options = {}) {
+  try {
+    const moderatorFilter = { 
+      ...filter,
+      role: { $in: ['admin', 'moderator'] }, 
+      isActive: true,
+      deletedAt: null 
+    };
+    return await this.find(moderatorFilter, null, options);
+  } catch (error) {
+    console.error('Error in findModerators:', error);
+    throw new Error(`Failed to find moderator users: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 };
