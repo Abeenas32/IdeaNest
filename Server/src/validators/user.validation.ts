@@ -76,15 +76,15 @@ export const changePasswordSchema = z.object({
 
 export const getUsersSchema = z.object({
  query: z.object({
-   page: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0).optional().default(1),
-   limit: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0 && n <= 100).optional().default(10),
+   page: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0).optional().default('1'),
+   limit: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0 && n <= 100).optional().default('10'),
    search: z.string().max(100).trim().optional(),
    role: z.enum(['user', 'admin']).optional(),
    isActive: z.string().transform(str => str === 'true').optional(),
    isEmailVerified: z.string().transform(str => str === 'true').optional(),
    sortBy: z.enum(['createdAt', 'updatedAt', 'name', 'email']).optional().default('createdAt'),
    sortOrder: z.enum(['asc', 'desc']).optional().default('desc'),
-   includeDeleted: z.string().transform(str => str === 'true').optional().default(false)
+   includeDeleted: z.string().transform(str => str === 'true').optional().default('false')
  })
 });
 
@@ -92,4 +92,9 @@ export const getUserByIdSchema = z.object({
  params: z.object({
    id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format')
  })
+});
+export const deleteUserSchema = z.object({
+  params: z.object({
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format')
+  })
 });

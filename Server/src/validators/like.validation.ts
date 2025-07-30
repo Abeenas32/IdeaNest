@@ -51,8 +51,8 @@ export const updateIdeaSchema = z.object({
 
 export const getIdeasSchema = z.object({
  query: z.object({
-   page: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0).optional().default(1),
-   limit: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0 && n <= 50).optional().default(10),
+   page: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0).optional().default('1'),
+   limit: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0 && n <= 50).optional().default('10'),
    search: z.string().max(200).trim().optional(),
    tags: z.string().transform(str => str.split(',').map(tag => tag.trim().toLowerCase()).filter(Boolean)).optional(),
    sortBy: z.enum(['createdAt', 'likeCount', 'viewCount', 'updatedAt']).optional().default('createdAt'),
