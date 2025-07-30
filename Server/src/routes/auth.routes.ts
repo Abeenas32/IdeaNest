@@ -1,4 +1,4 @@
-import { rateLimitMiddleware } from './../middleware/security.middleware';
+import { RateLimiterMiddleware } from './../middleware/rateLimit.middleware';
 import { Router } from 'express';
 import { register, login, refresh, logout, logoutAll, getProfile } from '../controllers/auth.controller';
 import { validate } from '../middleware/validation.middleware';
@@ -8,8 +8,8 @@ import { registerSchema, loginSchema, refreshTokenSchema } from '../validators/a
 const router = Router();
 
 // Public routes with rate limiting
-router.post('/register', rateLimitMiddleware, validate(registerSchema), register);
-router.post('/login', rateLimitMiddleware, validate(loginSchema), login);
+router.post('/register', RateLimiterMiddleware.authActions, validate(registerSchema), register);
+router.post('/login', RateLimiterMiddleware.authActions, validate(loginSchema), login);
 router.post('/refresh', validate(refreshTokenSchema), refresh);
 
 // Protected routes

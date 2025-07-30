@@ -345,7 +345,8 @@ export class UserService {
         Like.find({ userId: new mongoose.Types.ObjectId(userId) })
           .populate({
             path: 'ideaId',
-            select: 'id title'
+            model : 'Idea',
+            select: 'title'
           })
           .select('ideaId createdAt')
           .sort({ createdAt: -1 })
@@ -377,16 +378,18 @@ export class UserService {
       });
 
       // Add like activities
-      recentLikes.forEach(like => {
-        if (like.ideaId) {
-          activities.push({
-            type: 'idea_liked',
-            ideaId: like.ideaId.id.toString(),
-            ideaTitle: like.ideaId.title,
-            timestamp: like.createdAt
-          });
-        }
-      });
+     recentLikes.forEach(like => {
+  if (like.ideaId && typeof like.ideaId === 'object' && 'title' in like.ideaId) {
+    const idea = like.ideaId as { _id: mongoose.Types.ObjectId; title: string };
+
+    activities.push({
+      type: 'idea_liked',
+      ideaId: idea._id.toString(),
+      ideaTitle: idea.title,
+      timestamp: like.createdAt
+    });
+  }
+});
 
       // Sort by timestamp and paginate
       const sortedActivities = activities

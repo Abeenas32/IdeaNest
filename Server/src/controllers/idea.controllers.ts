@@ -24,10 +24,10 @@ class IdeaController {
             title: idea.title,
             content: idea.content,
             tags: idea.tags,
-            authorTpye: idea.authorType,
+            authorType: idea.authorType,
             createdAt: idea.createdAt,
           }
-        }, 'Idea created Successfylly');
+        }, 'Idea created Successfully');
     } catch (error) {
       next(error);
     }

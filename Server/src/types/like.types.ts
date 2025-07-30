@@ -1,5 +1,5 @@
 
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 export interface LikeServiceData {
   ideaId: string;
@@ -18,8 +18,10 @@ export interface LikeResult {
 
 export interface ILike extends Document {
   ideaId: mongoose.Types.ObjectId;
-  userId?: mongoose.Types.ObjectId; // Optional for authenticated users
-  fingerprint?: string; // For anonymous users (IP + User-Agent hash)
+  // Optional for authenticated users
+  userId?: mongoose.Types.ObjectId; 
+  // For anonymous users (IP + User-Agent hash)
+  fingerprint?: string; 
   ipAddress: string;
   userAgent: string;
   createdAt: Date;

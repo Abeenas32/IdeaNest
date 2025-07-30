@@ -16,7 +16,7 @@ export const sendSuccess = <T>(
         data,
         timestamp: new Date().toDateString()
     };
-    return res.sendStatus(statusCode).json(response);
+    return res.status(statusCode).json(response);
 
 }
 
@@ -33,7 +33,7 @@ export const sendSuccess = <T>(
          timestamp : new Date().toDateString(),
         
       }
-       return res.sendStatus(statuscode).json(response);
+       return res.status(statuscode).json(response);
  }
   export const sendValidationError = ( res :Response,
      errors : any,

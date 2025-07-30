@@ -5,7 +5,7 @@ import compression from 'compression';
 import { securityMiddleware, rateLimitMiddleware, mongoSanitizeMiddleware } from './middleware/security.middleware';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { config } from './config/environment.config';
-import router from './routes/auth.routes';
+import { apiRoutes } from './routes/index.routes';
 
 const app = express();
 
@@ -34,7 +34,7 @@ if (config.nodeEnv === 'development') {
 }
 
 // API routes
-app.use('/api/v1', router);
+app.use('/api/v1', apiRoutes);
 
 // Error handling middleware
 app.use(notFoundHandler);

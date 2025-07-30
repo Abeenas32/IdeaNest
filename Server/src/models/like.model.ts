@@ -36,10 +36,14 @@ const likeSchema = new Schema<ILike>(
 );
 
 // Compound indexes for efficient queries
-likeSchema.index({ ideaId: 1, userId: 1 }, { sparse: true }); // For authenticated users
-likeSchema.index({ ideaId: 1, fingerprint: 1 }, { sparse: true }); // For anonymous users
-likeSchema.index({ ipAddress: 1, createdAt: 1 }); // For rate limiting
-likeSchema.index({ createdAt: 1 }); // For cleanup operations
+// For authenticated users
+likeSchema.index({ ideaId: 1, userId: 1 }, { sparse: true }); 
+// For anonymous users
+likeSchema.index({ ideaId: 1, fingerprint: 1 }, { sparse: true }); 
+// For rate limiting
+likeSchema.index({ ipAddress: 1, createdAt: 1 }); 
+// For cleanup operations
+likeSchema.index({ createdAt: 1 });
 
 // Prevent duplicate likes
 likeSchema.index(

@@ -36,9 +36,35 @@ export const authorize = (roles: string[]) => {
   }
 }
 
+// Admin-only authorization
+export const requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+  if (!req.user) {
+    sendError(res, 'Authentication required', 401);
+    return;
+  }
+  if (req.user.role !== 'admin') {
+    sendError(res, 'Admin access required', 403);
+    return;
+  }
+  next();
+};
+
+// Moderator or Admin authorization
+export const requireModerator = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+  if (!req.user) {
+    sendError(res, 'Authentication required', 401);
+    return;
+  }
+  if (req.user.role !== 'admin' && req.user.role !== 'moderator') {
+    sendError(res, 'Moderator or Admin access required', 403);
+    return;
+  }
+  next();
+};
+
 // for the guest user cuz they don't have the token 
 //  required 
-export const optionalAuth = (req: AuthenticatedRequest, next: NextFunction): void => {
+export const optionalAuth = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
   try {
     const authHeader = req.headers.authorization;
     const token = extractToken(authHeader);

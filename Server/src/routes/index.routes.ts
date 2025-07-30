@@ -1,12 +1,18 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes';
 import { ideaRoutes } from './idea.routes';
+import { LikeRoutes } from './like.routes';
+import  { userRoutes }from './user.routes';
+import adminRoutes from './admin.routes';
 
 const router = Router();
 
 // API routes
-router.use('api/v1/auth', authRoutes);
-router.use('api/v1/ideas', ideaRoutes);
+router.use('/auth', authRoutes);
+router.use('/ideas', ideaRoutes);
+router.use('/likes', LikeRoutes);
+router.use('/users', userRoutes);
+router.use('/admin', adminRoutes);
 
 // Health check
 router.get('/health', (req, res) => {

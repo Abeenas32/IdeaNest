@@ -9,7 +9,7 @@ import { config } from "./environment.config";
        
        process.on('SIGINT', async () => {
         await mongoose.connection.close();
-        console.log('Mongo DB connection connection clsoed');
+        console.log('MongoDB connection closed');
         process.exit(0);
          
        })
@@ -20,13 +20,13 @@ import { config } from "./environment.config";
         
       }
        mongoose.connection.on('error', (error)=> {
-          console.error('MOngoDb connection error:',error);
+          console.error('MongoDB connection error:',error);
        })
         mongoose.connection.on('disconnected', ()=> {
-              console.log('MongoDb Connection disconnected')
+              console.log('MongoDB Connection disconnected')
         });
         mongoose.connection.on('reconnected', ()=> {
-              console.log('MongoDb reconnected');
+              console.log('MongoDB reconnected');
         })
     }
  

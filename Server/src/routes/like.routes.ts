@@ -10,7 +10,8 @@ router.post(
   '/ideas/:ideaId/like',
   optionalAuth,
   RateLimiterMiddleware.likeAction,
-  likeController.toogleLike // ⚠️ consider correcting to: toggleLike
+  // corrected from toogleLike
+  likeController.toggleLike 
 );
 
 // Check if the current user has liked the idea
@@ -22,7 +23,8 @@ router.get(
 
 // Get total like count for an idea
 router.get(
-  '/ideas/:ideaId/likes', // ✅ added missing slash
+  // added missing slash
+  '/ideas/:ideaId/likes', 
   RateLimiterMiddleware.public,
   likeController.getLikeCount
 );
