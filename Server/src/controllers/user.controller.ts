@@ -1,5 +1,5 @@
-import { UserService } from '@/services/user.service';
-import { sendError, sendSuccess } from '@/utils/response.utils';
+import { UserService } from '../services/user.service';
+import { sendError, sendSuccess } from '../utils/response.utils';
 import { Request, Response } from 'express';
 import { parse } from 'path';
 
