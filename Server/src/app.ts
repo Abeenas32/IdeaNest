@@ -34,7 +34,7 @@ if (config.nodeEnv === 'development') {
 }
 
 // API routes
-app.use('/api/v1', apiRoutes);
+app.use('/', apiRoutes);
 
 // Error handling middleware
 app.use(notFoundHandler);
