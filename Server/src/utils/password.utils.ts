@@ -174,5 +174,8 @@ export class PasswordUtils {
   }
 }
 
+// Keep the class definition as it is above
 
-export const { hashPassword, verifyPassword } = PasswordUtils;
+// Correctly bind methods so `this` works inside static methods
+export const hashPassword = PasswordUtils.hashPassword.bind(PasswordUtils);
+export const verifyPassword = PasswordUtils.verifyPassword.bind(PasswordUtils);

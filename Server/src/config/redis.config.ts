@@ -115,13 +115,18 @@ export default class RedisConfig {
     }
   }
 }
-let redis : RedisClient ; 
-try {
-   redis = await RedisConfig.getInstance();
-} catch (error) {
-  console.error('Failed to initialize redis', error);
-  process.exit(1);
-  
+let redis: RedisClient;
+
+async function initRedis() {
+  try {
+    redis = await RedisConfig.getInstance();
+    return redis;
+  } catch (error) {
+    console.error('Failed to initialize redis', error);
+    process.exit(1);
+  }
 }
- export { redis };
+initRedis();
+export { redis };
+
 

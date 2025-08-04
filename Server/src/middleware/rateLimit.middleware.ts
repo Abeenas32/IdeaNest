@@ -1,4 +1,3 @@
-// src/middleware/rateLimiter.middleware.ts
 import rateLimit from 'express-rate-limit';
 import { sendError } from '../utils/response.utils';
 

@@ -1,10 +1,10 @@
-import { userController } from "@/controllers/user.controller";
-import { authenticate } from "@/middleware/auth.middleware";
-import { rateLimitMiddleware } from "@/middleware/security.middleware";
-import { validate } from "@/middleware/validation.middleware";
+import { userController } from "../controllers/user.controller";
+import { authenticate } from "../middleware/auth.middleware";
+import { rateLimitMiddleware } from "../middleware/security.middleware";
+import { validate } from "../middleware/validation.middleware";
 import { Router } from "express";
-import { createUserSchema, deleteUserSchema, loginUserSchema, updateUserSchema } from "@/validators/user.validation";
-import { RateLimiterMiddleware } from "@/middleware/rateLimit.middleware";
+import { createUserSchema, deleteUserSchema, loginUserSchema, updateUserSchema } from "../validators/user.validation";
+import { RateLimiterMiddleware } from "../middleware/rateLimit.middleware";
 
 const router = Router();
 router.get('/profile', RateLimiterMiddleware.authenticatedOperations, authenticate, userController.getProfile);
