@@ -1,10 +1,10 @@
 import { PublicProfile, UserStats, UserActivity, UserProfile } from './../types/user.types';
-import { Idea } from "@/models/Idea.models";
-import { Like } from "@/models/like.model";
-import { User, IUser } from "@/models/User.model";
+import { Idea } from "../models/Idea.models";
+import { Like } from "../models/like.model";
+import { User, IUser } from "../models/User.model";
 import mongoose from "mongoose";
 import { CacheService } from "./cache.service";
-import { verifyPassword } from "@/utils/password.utils";
+import { verifyPassword } from "../utils/password.utils";
 
 
 export class UserService {
