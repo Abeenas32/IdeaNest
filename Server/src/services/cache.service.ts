@@ -203,7 +203,7 @@ static async clearCacheByPattern(pattern: string): Promise<number> {
 
     do {
       try {
-        // ✅ Fixed: Use individual parameters for scan command
+        // Use individual parameters for scan command
         const result = await redis.scan(
           cursor,
           'MATCH',
@@ -217,7 +217,8 @@ static async clearCacheByPattern(pattern: string): Promise<number> {
         matchedKeys.push(...keys);
       } catch (scanError) {
         console.error('❌ Redis scan error:', scanError);
-        break; // Exit the loop on scan error
+        // Exit the loop on scan error
+        break; 
       }
     } while (cursor !== '0');
 
