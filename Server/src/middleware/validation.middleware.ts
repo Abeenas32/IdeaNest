@@ -32,7 +32,7 @@ export const validate = (schema : ZodSchema) => {
             else{
                 sendValidationError(res, 'Invalid input data');
             }
-            
+              
           }
      }
 }
