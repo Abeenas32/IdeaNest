@@ -15,7 +15,26 @@ app.use(rateLimitMiddleware);
 app.use(mongoSanitizeMiddleware);
 
 // CORS configuration
-app.use(cors(config.cors));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      console.log("🔍 Incoming Origin:", origin);
+
+      if (!origin) return callback(null, true); // allow Postman / curl
+
+      if (config.cors.origin.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS policy: Origin ${origin} not allowed`));
+    },
+    methods: config.cors.methods,
+    allowedHeaders: config.cors.allowedHeaders,
+    credentials: config.cors.credentials,
+    optionsSuccessStatus: config.cors.optionsSuccessStatus,
+  })
+);
+
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

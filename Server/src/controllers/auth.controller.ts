@@ -22,9 +22,14 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       },
       accessToken: tokens.accessToken
     }, 'User registered successfully', 201);
-  } catch (error) {
-    next(error);
+  } catch (error : unknown) {
+  if(error instanceof Error){
+    sendError(res,error.message ,400);
   }
+  else{
+    sendError(res,'SignUp Failed',500);
+  }
+}
 };
 
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
