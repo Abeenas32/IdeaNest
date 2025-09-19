@@ -51,7 +51,7 @@ interface RateLimitConfig {
 }
 
 interface CorsConfig {
-  origin: string;
+  origin: string[];
   methods: string;
   allowedHeaders: string;
   optionsSuccessStatus: number;
@@ -76,6 +76,8 @@ interface Config {
   cors: CorsConfig;
   cookies: CookiesConfig;
 }
+const parseOrigins = (val?: string) =>
+  val ? val.split(",").map((o) => o.trim()) : ["http://localhost:3000"];
 
 export const config: Config = {
   port: parseInt(process.env.PORT || '3000'),
@@ -105,13 +107,16 @@ export const config: Config = {
     standardHeaders: true,
     legacyHeaders: false,
   },
-  cors: {
-    origin: process.env.CORS_ORIGIN || '*',
-    methods: process.env.CORS_METHODS || 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: process.env.CORS_ALLOWED_HEADERS || 'Content-Type,Authorization',
+ cors: {
+    origin: parseOrigins(process.env.CORS_ORIGIN), // 👈 use the helper
+    methods: process.env.CORS_METHODS || "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: process.env.CORS_ALLOWED_HEADERS || "Content-Type,Authorization",
     optionsSuccessStatus: 200,
-    credentials: process.env.CORS_CREDENTIALS === 'true',
+    credentials: process.env.CORS_CREDENTIALS
+      ? process.env.CORS_CREDENTIALS === "true"
+      : true,
   },
+
   cookies: {
     httpOnly: process.env.COOKIES_HTTP_ONLY === 'true',
     secure: process.env.NODE_ENV === 'production',
